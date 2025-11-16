@@ -19,7 +19,7 @@ export function constructProjectList(mainProjectList, onProjectClick) {
           projectItem.addEventListener('click', () => { 
                onProjectClick(project);
                activeProjectSelect(projectItem);
-               console.log("item clicked");
+               console.log("project clicked");
                }
           );
 

@@ -1,4 +1,5 @@
 import {constructProjectList} from "./projectListDom.js";
+import {constructItemList} from "./itemListDom.js";
 
 
 class todoItem {
@@ -76,11 +77,13 @@ const mainProjectList = new projectList(); // the one and only project list to b
     mainProjectList.appendProject(project2);
     mainProjectList.appendProject(project3);
     constructProjectList(mainProjectList, selectProject);
+
+    constructItemList(project3);
 })();
 
 
-function selectProject() { //do something when an element is clicked
-
+function selectProject(project) { //do something when a project is clicked
+    constructItemList(project) // pass selected project into construct item list so it knows which item list to construct
 };
 
 // export default mainProjectList;
