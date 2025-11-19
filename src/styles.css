@@ -37,11 +37,10 @@ html {
 #project-list {
     min-height: 3em;
     width: 100%;
-    /* background-color: green; */
     color: white;
-    margin: 2.7em;
-    border: 1px solid #000000;
-    border-radius: 1px;
+    margin: 2em;
+    /* border: 1px solid #000000;
+    border-radius: 1px; */
 }
 
 #dynamic-project-list {
@@ -51,11 +50,52 @@ html {
     color: #45484B;
 }
 
-#dynamic-project-list > div {
+#dynamic-project-list>div {
     padding-left: 2px;
 }
 
 .activeProject {
     background-color: #DCE0E4;
     border-radius: 6px;
+}
+
+#dynamic-item-list {
+    margin: 3em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+#new-project-button {
+    text-align: center;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #bebebe;
+    font-size: 0.9em;
+}
+
+#newProjectDiv {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+#new-project-input {
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #bebebe;
+    font-size: 0.9em;
+    grid: 1/2;
+}
+
+#new-project-submit {
+    grid: 2/3;
+    width: 100%;
+    background-color: #f0f0f0;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    padding-left: 4px;
+    text-align: center;
 }

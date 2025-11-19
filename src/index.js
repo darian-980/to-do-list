@@ -1,5 +1,5 @@
-import {constructProjectList} from "./projectListDom.js";
-import {constructItemList} from "./itemListDom.js";
+import { constructProjectList } from "./projectListDom.js";
+import { constructItemList } from "./itemListDom.js";
 
 
 class todoItem {
@@ -50,6 +50,10 @@ class projectList {
         this.projectList.push(project);
     }
 
+    prependProject(project) {
+        this.projectList.unshift(project);
+    }
+
     removeProject(id) {
         const index = this.projectList.findIndex(project => project.id === id); //find array item with matching id
         const removeProject = this.projectList.splice(index, 1); //remove 1 item at specified index
@@ -60,23 +64,25 @@ const mainProjectList = new projectList(); // the one and only project list to b
 
 (function () {
     const project2 = new projectItem("Daytime");
-    const item1 = new todoItem("floss", "floss teeth", "tonight", "medium");
-    const item2 = new todoItem("shower", "wash hair", "tonight", "high");
+    const item1 = new todoItem("floss", "floss teeth", "morning", "medium");
+    const item2 = new todoItem("shower", "wash hair", "morning", "high");
     project2.appendItem(item1);
     project2.appendItem(item2);
 
 
 
     const project3 = new projectItem("Evening");
-    const item3 = new todoItem("contacts", "swap contacts for new ones", "morning", "low");
+    const item3 = new todoItem("contacts", "swap contacts for new ones", "tonight", "low");
+    const item4 = new todoItem("shampoo", "shampoo hair before bed", "tonight", "medium");
     project3.appendItem(item3);
+    project3.appendItem(item4);
 
 
 
     console.log("created " + project2.title)
     mainProjectList.appendProject(project2);
     mainProjectList.appendProject(project3);
-    constructProjectList(mainProjectList, selectProject);
+    constructProjectList(mainProjectList, selectProject, addNewProject);
 
     constructItemList(project3);
 })();
@@ -85,6 +91,12 @@ const mainProjectList = new projectList(); // the one and only project list to b
 function selectProject(project) { //do something when a project is clicked
     constructItemList(project) // pass selected project into construct item list so it knows which item list to construct
 };
+
+function addNewProject(projectName){
+    const newProject = new projectItem(projectName);
+    mainProjectList.prependProject(newProject); //prepend adds to top of list
+    constructProjectList(mainProjectList, selectProject, addNewProject);
+}
 
 // export default mainProjectList;
 
