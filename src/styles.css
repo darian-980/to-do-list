@@ -99,3 +99,14 @@ html {
     padding-left: 4px;
     text-align: center;
 }
+
+#itemExpand{
+    display: flex;
+    gap: 3px;
+}
+
+.activeItem{
+    background-color:rgb(240, 239, 239);
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+}
