@@ -110,3 +110,37 @@ html {
     border: 1px solid #bebebe;
     border-radius: 6px;
 }
+
+#new-item-button {
+    text-align: center;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #bebebe;
+    font-size: 0.9em;
+}
+
+#newItemDiv {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+#new-item-input {
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #bebebe;
+    font-size: 0.9em;
+    grid: 1/2;
+}
+
+#new-item-submit {
+    grid: 2/3;
+    width: 100%;
+    background-color: #f0f0f0;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    padding-left: 4px;
+    text-align: center;
+}

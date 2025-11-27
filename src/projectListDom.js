@@ -68,14 +68,14 @@ export function constructProjectList(mainProjectList, onProjectClick, addNewProj
 
 
           projectListDynamic.prepend(newProjectDiv); // we use .prepend instead of .appendChild so that it doesn't add the textbox last
-     }
+     };
 
      function submitProjectButton() {
           const submitTextArea = document.getElementById(`new-project-input`);
           const submitTextValue = submitTextArea.value;
           console.log(submitTextValue);
           addNewProject(submitTextValue);
-     }
+     };
 }
 
 

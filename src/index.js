@@ -28,6 +28,10 @@ class projectItem {
         this.itemList.push(task);
     }
 
+    prependItem(task) {
+        this.itemList.unshift(task);
+    }
+
     removeItem(id) {
         const index = this.itemList.findIndex(item => item.id === id); //find array item with matching id
         const itemName = this.itemList[index].title; //grab name of task to be removed (for documentation only)
@@ -84,7 +88,7 @@ const mainProjectList = new projectList(); // the one and only project list to b
     mainProjectList.appendProject(project3);
     constructProjectList(mainProjectList, selectProject, addNewProject);
 
-    constructItemList(project3);
+    constructItemList(project3, addNewItem);
 })();
 
 
@@ -92,10 +96,18 @@ function selectProject(project) { //do something when a project is clicked
     constructItemList(project) // pass selected project into construct item list so it knows which item list to construct
 };
 
-function addNewProject(projectName){
+function addNewProject(projectName) {
     const newProject = new projectItem(projectName);
     mainProjectList.prependProject(newProject); //prepend adds to top of list
     constructProjectList(mainProjectList, selectProject, addNewProject);
+}
+
+function addNewItem(itemName, project) {
+    const projectId = project.id;
+    const projectIndex = mainProjectList.projectList.findIndex(project => project.id === projectId);
+    const addItemNew = new todoItem(itemName, "test", "test", "test");
+    mainProjectList.projectList[projectIndex].prependItem(addItemNew);
+    constructItemList(project, addNewItem);
 }
 
 // export default mainProjectList;
