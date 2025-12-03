@@ -80,29 +80,39 @@ export function constructItemList(projectItem, addNewItem) {
           }
           );
 
-          const taskDescription = document.createElement("input");
-          // taskDescription.textContent = "description";
-          taskDescription.setAttribute("id", "new-description-submit");
-          taskDescription.setAttribute("placeholder", "task description");
+          const newTaskdiv = document.createElement("div");
+          newTaskdiv.setAttribute("id", "new-task-div")
 
+          const taskDescription = document.createElement("input");
+          taskDescription.setAttribute("id", "new-description-submit");
+          taskDescription.setAttribute("placeholder", "Task Description");
+
+          const taskDate = document.createElement("input");
+          taskDate.setAttribute("type", "date");
+          taskDate.setAttribute("id", "due-date");
 
           newItemDiv.appendChild(submitTitleArea);
           newItemDiv.appendChild(submitTextButton);
-          newItemDiv.appendChild(taskDescription);
+
+          newTaskdiv.appendChild(newItemDiv);
+          newTaskdiv.appendChild(taskDescription);
+          newTaskdiv.appendChild(taskDate);
 
 
-          itemListDynamic.prepend(newItemDiv); // we use .prepend instead of .appendChild so that it doesn't add the textbox last
+          itemListDynamic.prepend(newTaskdiv); // we use .prepend instead of .appendChild so that it doesn't add the textbox last
      };
 
      function submitItemButton() {
           var submitTaskDescription = "";
           var submitTitleValue = "";
+          var submitDueDate = "";
 
           submitTitleValue = document.getElementById(`new-item-input`)?.value;
           submitTaskDescription = document.getElementById(`new-description-submit`)?.value;
+          submitDueDate = document.getElementById(`due-date`)?.value;
 
           console.log(submitTitleValue, submitTaskDescription);
-          addNewItem(submitTitleValue, submitTaskDescription, projectItem);
+          addNewItem(submitTitleValue, submitTaskDescription, submitDueDate, projectItem);
      }
 }
 

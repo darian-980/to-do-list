@@ -100,13 +100,13 @@ html {
     text-align: center;
 }
 
-#itemExpand{
+#itemExpand {
     display: flex;
     gap: 3px;
 }
 
-.activeItem{
-    background-color:rgb(240, 239, 239);
+.activeItem {
+    background-color: rgb(240, 239, 239);
     border: 1px solid #bebebe;
     border-radius: 6px;
 }
@@ -121,7 +121,7 @@ html {
 
 #newItemDiv {
     display: grid;
-    grid-template-columns: 4fr 1fr;
+    grid-template-columns: 4fr 0.5fr;
     width: 100%;
     box-sizing: border-box;
     margin: 0;
@@ -138,9 +138,36 @@ html {
 #new-item-submit {
     grid: 2/3;
     width: 100%;
+    max-width: 10vw;
     background-color: #f0f0f0;
     border: 1px solid #bebebe;
     border-radius: 6px;
     padding-left: 4px;
     text-align: center;
+}
+
+#date-div {
+    display: flex;
+}
+
+#new-description-submit {
+    max-width: 40vw;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #494949;
+    font-size: 0.9em;
+}
+
+#due-date {
+    max-width: 10vw;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #494949;
+    font-size: 0.9em;
+}
+
+#new-task-div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 }

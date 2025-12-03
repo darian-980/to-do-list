@@ -102,10 +102,10 @@ function addNewProject(projectName) {
     constructProjectList(mainProjectList, selectProject, addNewProject);
 }
 
-function addNewItem(itemName, itemDescription, project) {
+function addNewItem(itemName, itemDescription, DueDate, project) {
     const projectId = project.id;
     const projectIndex = mainProjectList.projectList.findIndex(project => project.id === projectId);
-    const addItemNew = new todoItem(itemName, itemDescription, "test", "test");
+    const addItemNew = new todoItem(itemName, itemDescription, DueDate, "test");
     mainProjectList.projectList[projectIndex].prependItem(addItemNew);
     constructItemList(project, addNewItem);
 }
