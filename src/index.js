@@ -1,5 +1,6 @@
 import { constructProjectList } from "./projectListDom.js";
 import { constructItemList } from "./itemListDom.js";
+import "./styles.css";
 
 
 class todoItem {
@@ -102,10 +103,10 @@ function addNewProject(projectName) {
     constructProjectList(mainProjectList, selectProject, addNewProject);
 }
 
-function addNewItem(itemName, itemDescription, DueDate, project) {
+function addNewItem(itemName, itemDescription, DueDate, Priority, project) {
     const projectId = project.id;
     const projectIndex = mainProjectList.projectList.findIndex(project => project.id === projectId);
-    const addItemNew = new todoItem(itemName, itemDescription, DueDate, "test");
+    const addItemNew = new todoItem(itemName, itemDescription, DueDate, Priority);
     mainProjectList.projectList[projectIndex].prependItem(addItemNew);
     constructItemList(project, addNewItem);
 }

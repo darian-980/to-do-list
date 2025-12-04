@@ -1,3 +1,5 @@
+import { format } from "date-fns"; 
+
 export function constructItemList(projectItem, addNewItem) {
 
      const existingList = document.getElementById(`dynamic-item-list`); //grab dynamic item list if it already exists
@@ -55,6 +57,11 @@ export function constructItemList(projectItem, addNewItem) {
           itemdueDate.setAttribute("class", "itemDueDate");
           itemExpand.appendChild(itemdueDate);
 
+          const itemPriority = document.createElement("div");
+          itemPriority.textContent = Item.priority;
+          itemPriority.setAttribute("class", "itemPriority");
+          itemExpand.appendChild(itemPriority);
+
           item_task.appendChild(itemExpand);
 
 
@@ -91,12 +98,35 @@ export function constructItemList(projectItem, addNewItem) {
           taskDate.setAttribute("type", "date");
           taskDate.setAttribute("id", "due-date");
 
+          ////////
+
+          const taskPriority = document.createElement("select");
+          taskPriority.setAttribute("name", "priority")
+          taskPriority.setAttribute("id", "task-priority")
+
+          const lowPriority = document.createElement("option");
+          lowPriority.textContent = "Low";
+          lowPriority.setAttribute("value", "low");
+
+          const mediumPriority = document.createElement("option");
+          mediumPriority.textContent = "Medium";
+          mediumPriority.setAttribute("value", "medium");
+
+          const highPriority = document.createElement("option");
+          highPriority.textContent = "High";
+          highPriority.setAttribute("value", "high");
+
+          taskPriority.appendChild(lowPriority);
+          taskPriority.appendChild(mediumPriority);
+          taskPriority.appendChild(highPriority);
+
           newItemDiv.appendChild(submitTitleArea);
           newItemDiv.appendChild(submitTextButton);
 
           newTaskdiv.appendChild(newItemDiv);
           newTaskdiv.appendChild(taskDescription);
           newTaskdiv.appendChild(taskDate);
+          newTaskdiv.appendChild(taskPriority);
 
 
           itemListDynamic.prepend(newTaskdiv); // we use .prepend instead of .appendChild so that it doesn't add the textbox last
@@ -106,13 +136,29 @@ export function constructItemList(projectItem, addNewItem) {
           var submitTaskDescription = "";
           var submitTitleValue = "";
           var submitDueDate = "";
+          var submitPriority = "low";
 
           submitTitleValue = document.getElementById(`new-item-input`)?.value;
           submitTaskDescription = document.getElementById(`new-description-submit`)?.value;
           submitDueDate = document.getElementById(`due-date`)?.value;
+          submitPriority = document.getElementById(`task-priority`)?.value;
 
-          console.log(submitTitleValue, submitTaskDescription);
-          addNewItem(submitTitleValue, submitTaskDescription, submitDueDate, projectItem);
+          if (submitDueDate === ""){
+               submitDueDate = currentDate();
+          }
+
+          const checkTitleBlank = submitTitleValue.replaceAll(' ', ''); // removes blank spaces for checking
+          if (checkTitleBlank === "") {
+               return; // if the title is blank then don't add the task
+          } else {
+               addNewItem(submitTitleValue, submitTaskDescription, submitDueDate, submitPriority, projectItem);
+          }
      }
+
+     function currentDate(){
+          const today = format(new Date(), 'yyyy-MM-dd');
+          console.log(today);
+          return today;
+     };
 }
 

@@ -171,3 +171,11 @@ html {
     flex-direction: column;
     gap: 7px;
 }
+
+#task-priority {
+    max-width: 10vw;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #494949;
+    font-size: 0.9em;
+}
