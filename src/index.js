@@ -89,26 +89,43 @@ const mainProjectList = new projectList(); // the one and only project list to b
     mainProjectList.appendProject(project3);
     constructProjectList(mainProjectList, selectProject, addNewProject);
 
-    constructItemList(project3, addNewItem);
+    constructItemList(project3, addNewItem, deleteItem, deleteProject);
 })();
 
 
 function selectProject(project) { //do something when a project is clicked
-    constructItemList(project) // pass selected project into construct item list so it knows which item list to construct
+    constructItemList(project, addNewItem, deleteItem, deleteProject) // pass selected project into construct item list so it knows which item list to construct
 };
 
 function addNewProject(projectName) {
     const newProject = new projectItem(projectName);
     mainProjectList.prependProject(newProject); //prepend adds to top of list
     constructProjectList(mainProjectList, selectProject, addNewProject);
-}
+    selectProject(newProject);
+};
 
 function addNewItem(itemName, itemDescription, DueDate, Priority, project) {
     const projectId = project.id;
     const projectIndex = mainProjectList.projectList.findIndex(project => project.id === projectId);
     const addItemNew = new todoItem(itemName, itemDescription, DueDate, Priority);
     mainProjectList.projectList[projectIndex].prependItem(addItemNew);
-    constructItemList(project, addNewItem);
+    constructItemList(project, addNewItem, deleteItem, deleteProject);
+};
+
+function deleteItem(project, item) {
+    const itemId = item.id;
+    const itemIndex = project.itemList.findIndex(item => item.id === itemId);
+    project.itemList.splice(itemIndex, 1);
+    selectProject(project);
+};
+
+function deleteProject(project) {
+    const projectId = project.id;
+    console.log(projectId);
+    const projectIndex = mainProjectList.projectList.findIndex(project => project.id === projectId);
+    console.log(projectIndex + " index");
+    mainProjectList.projectList.splice(projectIndex, 1);
+    constructProjectList(mainProjectList, selectProject, addNewProject);
 }
 
 // export default mainProjectList;

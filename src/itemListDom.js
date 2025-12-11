@@ -1,6 +1,7 @@
-import { format } from "date-fns"; 
+import { format } from "date-fns";
 
-export function constructItemList(projectItem, addNewItem) {
+export function constructItemList(projectItem, addNewItem, deleteItem, deleteProject) {
+
 
      const existingList = document.getElementById(`dynamic-item-list`); //grab dynamic item list if it already exists
 
@@ -8,6 +9,19 @@ export function constructItemList(projectItem, addNewItem) {
 
 
      const itemListDiv = document.getElementById(`item-list`);
+
+     const existingButton = document.getElementById(`delete-project-button`);
+     existingButton?.remove();
+
+     const deleteProjectButton = document.createElement("div");
+     deleteProjectButton.setAttribute("id", "delete-project-button");
+     deleteProjectButton.textContent = "Remove Project";
+     deleteProjectButton.addEventListener('click', () => {
+          deleteProject(projectItem);
+          freshItemList();
+     }
+     );
+     itemListDiv.appendChild(deleteProjectButton);
 
      const itemListDynamic = document.createElement("div"); // make a new element that we can delete at any time to recreate/refresh a new list
      itemListDynamic.setAttribute("id", "dynamic-item-list");
@@ -61,6 +75,15 @@ export function constructItemList(projectItem, addNewItem) {
           itemPriority.textContent = Item.priority;
           itemPriority.setAttribute("class", "itemPriority");
           itemExpand.appendChild(itemPriority);
+
+          const deleteTask = document.createElement("div");
+          deleteTask.textContent = "Remove Task";
+          deleteTask.setAttribute("id", "delete-task");
+          deleteTask.addEventListener('click', () => {
+               deleteItem(projectItem, Item);
+          }
+          );
+          itemExpand.appendChild(deleteTask);
 
           item_task.appendChild(itemExpand);
 
@@ -143,7 +166,7 @@ export function constructItemList(projectItem, addNewItem) {
           submitDueDate = document.getElementById(`due-date`)?.value;
           submitPriority = document.getElementById(`task-priority`)?.value;
 
-          if (submitDueDate === ""){
+          if (submitDueDate === "") {
                submitDueDate = currentDate();
           }
 
@@ -155,10 +178,18 @@ export function constructItemList(projectItem, addNewItem) {
           }
      }
 
-     function currentDate(){
+     function currentDate() {
           const today = format(new Date(), 'yyyy-MM-dd');
           console.log(today);
           return today;
      };
+
+     function freshItemList() {
+          const existingList = document.getElementById(`dynamic-item-list`);
+          existingList?.remove();
+
+          const existingButton = document.getElementById(`delete-project-button`);
+          existingButton?.remove();
+     }
 }
 

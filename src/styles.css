@@ -179,3 +179,25 @@ html {
     color: #494949;
     font-size: 0.9em;
 }
+
+#delete-task {
+    max-width: 10vw;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #494949;
+    font-size: 0.9em;
+    text-align: center;
+    background-color: #eeeeee;
+}
+
+#delete-project-button {
+    max-width: 10vw;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #494949;
+    font-size: 0.9em;
+    text-align: center;
+    background-color: #eeeeee;
+    margin-left: 3em;
+    margin-top: 2em;
+}
