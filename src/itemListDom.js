@@ -2,55 +2,57 @@ import { format } from "date-fns";
 
 export function constructItemList(projectItem, addNewItem, deleteItem, deleteProject) {
 
+     if (projectItem !== null) {
 
-     const existingList = document.getElementById(`dynamic-item-list`); //grab dynamic item list if it already exists
+          const existingList = document.getElementById(`dynamic-item-list`); //grab dynamic item list if it already exists
 
-     existingList?.remove(); // delete item project list if it already exists
+          existingList?.remove(); // delete item project list if it already exists
 
 
-     const itemListDiv = document.getElementById(`item-list`);
+          const itemListDiv = document.getElementById(`item-list`);
 
-     const existingButton = document.getElementById(`delete-project-button`);
-     existingButton?.remove();
+          const existingButton = document.getElementById(`delete-project-button`);
+          existingButton?.remove();
 
-     const deleteProjectButton = document.createElement("div");
-     deleteProjectButton.setAttribute("id", "delete-project-button");
-     deleteProjectButton.textContent = "Remove Project";
-     deleteProjectButton.addEventListener('click', () => {
-          deleteProject(projectItem);
-          freshItemList();
-     }
-     );
-     itemListDiv.appendChild(deleteProjectButton);
-
-     const itemListDynamic = document.createElement("div"); // make a new element that we can delete at any time to recreate/refresh a new list
-     itemListDynamic.setAttribute("id", "dynamic-item-list");
-     itemListDiv.appendChild(itemListDynamic);
-
-     const newItemButton = document.createElement("div");
-     newItemButton.setAttribute("id", "new-item-button");
-     newItemButton.textContent = "+ New Task";
-     newItemButton.addEventListener('click', () => {
-          // addNewProject();
-          itemSubmitSection();
-          console.log("new item button clicked");
-     }
-     );
-     itemListDynamic.appendChild(newItemButton);
-
-     for (const item of projectItem.itemList) {
-          // console.log("item " + item.title)
-          const item_task = document.createElement("div");
-          item_task.setAttribute("id", item.id); // add the id to the element so that it can be referenced
-          item_task.textContent = item.title; // set project title
-          item_task.addEventListener('click', () => {
-               // onProjectClick(item);
-               activeItemSelect(item, item_task);
-               console.log("item clicked");
+          const deleteProjectButton = document.createElement("div");
+          deleteProjectButton.setAttribute("id", "delete-project-button");
+          deleteProjectButton.textContent = "Remove Project";
+          deleteProjectButton.addEventListener('click', () => {
+               deleteProject(projectItem);
+               freshItemList();
           }
           );
+          itemListDiv.appendChild(deleteProjectButton);
 
-          itemListDynamic.appendChild(item_task); // add project to the dynamic list
+          const itemListDynamic = document.createElement("div"); // make a new element that we can delete at any time to recreate/refresh a new list
+          itemListDynamic.setAttribute("id", "dynamic-item-list");
+          itemListDiv.appendChild(itemListDynamic);
+
+          const newItemButton = document.createElement("div");
+          newItemButton.setAttribute("id", "new-item-button");
+          newItemButton.textContent = "+ New Task";
+          newItemButton.addEventListener('click', () => {
+               // addNewProject();
+               itemSubmitSection();
+               console.log("new item button clicked");
+          }
+          );
+          itemListDynamic.appendChild(newItemButton);
+
+          for (const item of projectItem.itemList) {
+               // console.log("item " + item.title)
+               const item_task = document.createElement("div");
+               item_task.setAttribute("id", item.id); // add the id to the element so that it can be referenced
+               item_task.textContent = item.title; // set project title
+               item_task.addEventListener('click', () => {
+                    // onProjectClick(item);
+                    activeItemSelect(item, item_task);
+                    console.log("item clicked");
+               }
+               );
+
+               itemListDynamic.appendChild(item_task); // add project to the dynamic list
+          }
      }
 
      function activeItemSelect(Item, item_task) {
@@ -178,12 +180,6 @@ export function constructItemList(projectItem, addNewItem, deleteItem, deletePro
           }
      }
 
-     function currentDate() {
-          const today = format(new Date(), 'yyyy-MM-dd');
-          console.log(today);
-          return today;
-     };
-
      function freshItemList() {
           const existingList = document.getElementById(`dynamic-item-list`);
           existingList?.remove();
@@ -193,3 +189,13 @@ export function constructItemList(projectItem, addNewItem, deleteItem, deletePro
      }
 }
 
+export function currentDate() {
+     const today = format(new Date(), 'yyyy-MM-dd');
+     console.log(today);
+     return today;
+};
+
+export function formatDate(date){
+     const formattedDate = format(new Date(date), 'yyyy-MM-dd');
+     return formattedDate;
+}

@@ -1,5 +1,7 @@
 import { constructProjectList } from "./projectListDom.js";
 import { constructItemList } from "./itemListDom.js";
+import { currentDate } from "./itemListDom.js";
+import { formatDate } from "./itemListDom.js";
 import { storageAvailable } from "./localstorage_check.js"
 import "./styles.css";
 
@@ -80,17 +82,31 @@ class projectList {
 const mainProjectList = new projectList(); // the one and only project list to be used globally
 
 (function () {
+
+
+    // addDefaultItems();
+
+    unpackLocalStorage();
+
+
+
+    constructProjectList(mainProjectList, selectProject, addNewProject);
+
+
+})();
+
+function addDefaultItems() {
     const project2 = new projectItem("Daytime");
-    const item1 = new todoItem("floss", "floss teeth", "morning", "medium");
-    const item2 = new todoItem("shower", "wash hair", "morning", "high");
+    const item1 = new todoItem("floss", "floss teeth", currentDate(), "medium");
+    const item2 = new todoItem("shower", "wash hair", currentDate(), "high");
     project2.appendItem(item1);
     project2.appendItem(item2);
 
 
 
     const project3 = new projectItem("Evening");
-    const item3 = new todoItem("contacts", "swap contacts for new ones", "tonight", "low");
-    const item4 = new todoItem("shampoo", "shampoo hair before bed", "tonight", "medium");
+    const item3 = new todoItem("contacts", "swap contacts for new ones", currentDate(), "low");
+    const item4 = new todoItem("shampoo", "shampoo hair before bed", currentDate(), "medium");
     project3.appendItem(item3);
     project3.appendItem(item4);
 
@@ -100,18 +116,46 @@ const mainProjectList = new projectList(); // the one and only project list to b
     mainProjectList.appendProject(project2);
     mainProjectList.appendProject(project3);
 
-
-    constructProjectList(mainProjectList, selectProject, addNewProject);
-    constructItemList(project3, addNewItem, deleteItem, deleteProject);
-
     if (storageAvailable("localStorage")) {
         console.log("storage is available");
         const mainProjectListJSON = JSON.stringify(mainProjectList);
         localStorage.setItem("mainProjectList", mainProjectListJSON);
-    } else {
-        console.log("localstorage is not available");
     }
-})();
+
+};
+
+function unpackLocalStorage() {
+    const mainProjectListJSON = localStorage.getItem("mainProjectList");
+    const mainProjectListParsed = JSON.parse(mainProjectListJSON);
+    const projectListArray = mainProjectListParsed.projectList;
+
+    let i = 0;
+    while (i < projectListArray.length) {
+        const projectTitle = projectListArray[i].title;
+        const projectID = projectListArray[i].id;
+        const addProject = new projectItem(projectTitle, projectID);
+        // console.log(projectListArray);
+
+        let k = 0;
+        while (k < projectListArray[i].itemList.length) {
+            const itemTitle = projectListArray[i].itemList[k].title;
+            const itemDescription = projectListArray[i].itemList[k].description;
+            const itemdueDate = projectListArray[i].itemList[k].dueDate;
+            const convDate = formatDate(itemdueDate);
+            const itemPriority = projectListArray[i].itemList[k].priority;
+            const itemStatus = projectListArray[i].itemList[k].status;
+            const itemID = projectListArray[i].itemList[k].id;
+
+            const addItem = new todoItem(itemTitle, itemDescription, convDate, itemPriority, itemID);
+            addProject.appendItem(addItem);
+            console.log(addItem);
+            k++;
+        };
+
+        mainProjectList.appendProject(addProject);
+        i++;
+    }
+}
 
 
 function selectProject(project) { //do something when a project is clicked
@@ -140,7 +184,7 @@ function addNewItem(itemName, itemDescription, DueDate, Priority, project) {
 
         const ProjectIndex = mainProjectListParsed.projectList.findIndex(project => project.id === projectId);
         mainProjectListParsed.projectList[ProjectIndex].itemList.push(addItemNew);
-        
+
         const mainProjectListConverted = JSON.stringify(mainProjectListParsed);
         localStorage.setItem("mainProjectList", mainProjectListConverted);
     }
