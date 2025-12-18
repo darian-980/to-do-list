@@ -84,11 +84,11 @@ const mainProjectList = new projectList(); // the one and only project list to b
 (function () {
 
 
-    // addDefaultItems();
-
-    unpackLocalStorage();
-
-
+    if (localStorage.getItem("mainProjectList") === null) { //loads default items if there is no mainProjectList in the localStorage
+        addDefaultItems();
+    } else {
+        unpackLocalStorage();
+    }
 
     constructProjectList(mainProjectList, selectProject, addNewProject);
 
@@ -163,10 +163,21 @@ function selectProject(project) { //do something when a project is clicked
 };
 
 function addNewProject(projectName) {
-    const newProject = new projectItem(projectName);
+    const itemID = crypto.randomUUID(); //create the ID here so it can easily be passed to localStorage
+    const newProject = new projectItem(projectName, itemID);
     mainProjectList.prependProject(newProject); //prepend adds to top of list
     constructProjectList(mainProjectList, selectProject, addNewProject);
     selectProject(newProject);
+
+    if (storageAvailable("localStorage")) {
+        const mainProjectListJSON = localStorage.getItem("mainProjectList");
+        const mainProjectListParsed = JSON.parse(mainProjectListJSON);
+
+        mainProjectListParsed.projectList.unshift(newProject);
+
+        const mainProjectListConverted = JSON.stringify(mainProjectListParsed);
+        localStorage.setItem("mainProjectList", mainProjectListConverted);
+    }
 };
 
 function addNewItem(itemName, itemDescription, DueDate, Priority, project) {
@@ -183,7 +194,7 @@ function addNewItem(itemName, itemDescription, DueDate, Priority, project) {
         const mainProjectListParsed = JSON.parse(mainProjectListJSON);
 
         const ProjectIndex = mainProjectListParsed.projectList.findIndex(project => project.id === projectId);
-        mainProjectListParsed.projectList[ProjectIndex].itemList.push(addItemNew);
+        mainProjectListParsed.projectList[ProjectIndex].itemList.unshift(addItemNew);
 
         const mainProjectListConverted = JSON.stringify(mainProjectListParsed);
         localStorage.setItem("mainProjectList", mainProjectListConverted);
@@ -192,9 +203,22 @@ function addNewItem(itemName, itemDescription, DueDate, Priority, project) {
 
 function deleteItem(project, item) {
     const itemId = item.id;
+    const projectId = project.id;
     const itemIndex = project.itemList.findIndex(item => item.id === itemId);
     project.itemList.splice(itemIndex, 1);
     selectProject(project);
+
+    if (storageAvailable("localStorage")) {
+        const mainProjectListJSON = localStorage.getItem("mainProjectList");
+        const mainProjectListParsed = JSON.parse(mainProjectListJSON);
+
+        const ProjectIndex = mainProjectListParsed.projectList.findIndex(project => project.id === projectId);
+        const ItemIndex = mainProjectListParsed.projectList[ProjectIndex].itemList.findIndex(item => item.id === itemId);
+        mainProjectListParsed.projectList[ProjectIndex].itemList.splice(ItemIndex, 1);
+
+        const mainProjectListConverted = JSON.stringify(mainProjectListParsed);
+        localStorage.setItem("mainProjectList", mainProjectListConverted);
+    }
 };
 
 function deleteProject(project) {
@@ -204,6 +228,17 @@ function deleteProject(project) {
     console.log(projectIndex + " index");
     mainProjectList.projectList.splice(projectIndex, 1);
     constructProjectList(mainProjectList, selectProject, addNewProject);
+
+    if (storageAvailable("localStorage")) {
+        const mainProjectListJSON = localStorage.getItem("mainProjectList");
+        const mainProjectListParsed = JSON.parse(mainProjectListJSON);
+
+        const ProjectIndex = mainProjectListParsed.projectList.findIndex(project => project.id === projectId);
+        mainProjectListParsed.projectList.splice(ProjectIndex, 1);
+
+        const mainProjectListConverted = JSON.stringify(mainProjectListParsed);
+        localStorage.setItem("mainProjectList", mainProjectListConverted);
+    }
 }
 
 // export default mainProjectList;
