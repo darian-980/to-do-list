@@ -81,6 +81,8 @@ class projectList {
 
 const mainProjectList = new projectList(); // the one and only project list to be used globally
 
+var currentTaskID = 1; // the one and only value to store currentTaskID to check
+
 (function () {
 
 
@@ -141,7 +143,7 @@ function unpackLocalStorage() {
             const itemTitle = projectListArray[i].itemList[k].title;
             const itemDescription = projectListArray[i].itemList[k].description;
             const itemdueDate = projectListArray[i].itemList[k].dueDate;
-            const convDate = formatDate(itemdueDate);
+            const convDate = itemdueDate;
             const itemPriority = projectListArray[i].itemList[k].priority;
             const itemStatus = projectListArray[i].itemList[k].status;
             const itemID = projectListArray[i].itemList[k].id;
@@ -157,9 +159,18 @@ function unpackLocalStorage() {
     }
 }
 
+function currentTaskCheck(taskID) {
+    if (currentTaskID === taskID) {
+        return true
+    } else {
+        currentTaskID = taskID;
+        return false
+    }
+}
+
 
 function selectProject(project) { //do something when a project is clicked
-    constructItemList(project, addNewItem, deleteItem, deleteProject) // pass selected project into construct item list so it knows which item list to construct
+    constructItemList(project, addNewItem, deleteItem, deleteProject, currentTaskCheck) // pass selected project into construct item list so it knows which item list to construct
 };
 
 function addNewProject(projectName) {
@@ -180,13 +191,26 @@ function addNewProject(projectName) {
     }
 };
 
-function addNewItem(itemName, itemDescription, DueDate, Priority, project) {
+function addNewItem(itemName, itemDescription, DueDate, Priority, project, modifier, itemId) {
     const projectId = project.id;
     const projectIndex = mainProjectList.projectList.findIndex(project => project.id === projectId);
     const itemID = crypto.randomUUID(); //create the ID here so it can easily be passed to localStorage
-    const addItemNew = new todoItem(itemName, itemDescription, DueDate, Priority, itemID);
-    mainProjectList.projectList[projectIndex].prependItem(addItemNew);
-    constructItemList(project, addNewItem, deleteItem, deleteProject);
+
+    var addItemNew;
+    if (modifier === "add") {
+        addItemNew = new todoItem(itemName, itemDescription, DueDate, Priority, itemID);
+        mainProjectList.projectList[projectIndex].prependItem(addItemNew);
+    } else if (modifier === "edit") {
+        const itemIndex = project.itemList.findIndex(item => item.id === itemId);
+        project.itemList[itemIndex].title = itemName;
+        project.itemList[itemIndex].description = itemDescription;
+        project.itemList[itemIndex].dueDate = DueDate;
+        project.itemList[itemIndex].priority = Priority;
+    }
+
+    constructItemList(project, addNewItem, deleteItem, deleteProject, currentTaskCheck);
+
+    currentTaskID = 1;
 
 
     if (storageAvailable("localStorage")) {
@@ -194,7 +218,15 @@ function addNewItem(itemName, itemDescription, DueDate, Priority, project) {
         const mainProjectListParsed = JSON.parse(mainProjectListJSON);
 
         const ProjectIndex = mainProjectListParsed.projectList.findIndex(project => project.id === projectId);
-        mainProjectListParsed.projectList[ProjectIndex].itemList.unshift(addItemNew);
+        if (modifier === "add") {
+            mainProjectListParsed.projectList[ProjectIndex].itemList.unshift(addItemNew);
+        } else if (modifier === "edit") {
+            const ItemIndex = mainProjectListParsed.projectList[ProjectIndex].itemList.findIndex(item => item.id === itemId);
+            mainProjectListParsed.projectList[ProjectIndex].itemList[ItemIndex].title = itemName;
+            mainProjectListParsed.projectList[ProjectIndex].itemList[ItemIndex].description = itemDescription;
+            mainProjectListParsed.projectList[ProjectIndex].itemList[ItemIndex].dueDate = DueDate;
+            mainProjectListParsed.projectList[ProjectIndex].itemList[ItemIndex].priority = Priority;
+        }
 
         const mainProjectListConverted = JSON.stringify(mainProjectListParsed);
         localStorage.setItem("mainProjectList", mainProjectListConverted);

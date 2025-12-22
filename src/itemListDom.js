@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-export function constructItemList(projectItem, addNewItem, deleteItem, deleteProject) {
+export function constructItemList(projectItem, addNewItem, deleteItem, deleteProject, currentTaskCheck) {
 
      if (projectItem !== null) {
 
@@ -56,38 +56,144 @@ export function constructItemList(projectItem, addNewItem, deleteItem, deletePro
      }
 
      function activeItemSelect(Item, item_task) {
-          document.querySelectorAll('#dynamic-item-list > div').forEach(div => div.classList.remove('activeItem')); //remove "activeProject" class from all projects
-          item_task.setAttribute("class", "activeItem"); // add "activeItem" class to provided project
 
-          document.querySelectorAll('#itemExpand').forEach(div => div.remove()); //remove all itemExpands
-          const itemExpand = document.createElement("div");
-          itemExpand.setAttribute("id", "itemExpand");
+          if (!currentTaskCheck(item_task.getAttribute("id"))) { //checks if the item is currently selected, if it is then don't run code
 
-          const itemDescription = document.createElement("div");
-          itemDescription.textContent = Item.description;
-          itemDescription.setAttribute("class", "itemDescription");
-          itemExpand.appendChild(itemDescription);
+               document.querySelectorAll('#dynamic-item-list > div').forEach(div => div.classList.remove('activeItem')); //remove "activeItem" class from all projects
+               item_task.setAttribute("class", "activeItem"); // add "activeItem" class to provided project
 
-          const itemdueDate = document.createElement("div");
-          itemdueDate.textContent = Item.dueDate;
-          itemdueDate.setAttribute("class", "itemDueDate");
-          itemExpand.appendChild(itemdueDate);
+               document.querySelectorAll('.itemExpand').forEach(el => el.remove());
+               var itemExpand = document.getElementById(`itemExpand`);
+               if (!itemExpand) {
+                    itemExpand = document.createElement("div");
+                    itemExpand.setAttribute("class", "itemExpand");
+               };
 
-          const itemPriority = document.createElement("div");
-          itemPriority.textContent = Item.priority;
-          itemPriority.setAttribute("class", "itemPriority");
-          itemExpand.appendChild(itemPriority);
+               const itemDescription = document.createElement("div");
+               itemDescription.textContent = Item.description;
+               itemDescription.setAttribute("class", "itemDescription");
+               itemExpand.appendChild(itemDescription);
 
-          const deleteTask = document.createElement("div");
-          deleteTask.textContent = "Remove Task";
-          deleteTask.setAttribute("id", "delete-task");
-          deleteTask.addEventListener('click', () => {
-               deleteItem(projectItem, Item);
+               const itemdueDate = document.createElement("div");
+               itemdueDate.textContent = Item.dueDate;
+               itemdueDate.setAttribute("class", "itemDueDate");
+               itemExpand.appendChild(itemdueDate);
+
+               const itemPriority = document.createElement("div");
+               itemPriority.textContent = Item.priority;
+               itemPriority.setAttribute("class", "itemPriority");
+               itemExpand.appendChild(itemPriority);
+
+               const editTask = document.createElement("div");
+               editTask.textContent = "Edit Task";
+               editTask.setAttribute("id", "edit-task");
+               editTask.addEventListener('click', () => {
+                    // editItem(projectItem, Item);
+                    editItemMenu(Item, item_task, itemExpand);
+                    console.log("edit button clicked")
+               }
+               );
+
+               const deleteTask = document.createElement("div");
+               deleteTask.textContent = "Remove Task";
+               deleteTask.setAttribute("id", "delete-task");
+               deleteTask.addEventListener('click', () => {
+                    deleteItem(projectItem, Item);
+               }
+               );
+               itemExpand.appendChild(editTask);
+               itemExpand.appendChild(deleteTask);
+
+               item_task.appendChild(itemExpand);
+          }
+
+
+     };
+
+     function editItemMenu(Item, item_task, itemExpand) {
+          var task_name = Item.title;
+          var task_description = Item.description;
+          var task_due_date = Item.dueDate.toString();
+          var task_priority = Item.priority;
+
+          // checkTitleBlank = task_name.replaceAll(' ', ''); // removes blank spaces for checking
+          // if (checkTitleBlank === "") {
+          //      return; // if the title is blank then don't add the task
+          // };
+
+          // if (task_description === null) {
+          //      task_description = "";
+          // };
+          // if (task_due_date === null) {
+          //      task_due_date = currentDate();
+          // };
+
+          // if (task_priority === null) {
+          //      task_priority = "";
+          // }
+
+          item_task.childNodes.forEach(node => { //the way to remove an item's text value without affecting the children
+               if (node.nodeType === Node.TEXT_NODE) {
+                    node.remove();
+               }
+          });
+
+          itemExpand.innerHTML = ""; //removes the task description elements to make room for the edit elements
+
+          const editTitleArea = document.createElement("input");
+          editTitleArea.setAttribute("type", "text");
+          editTitleArea.setAttribute("id", "new-item-input");
+          editTitleArea.setAttribute("value", task_name);
+
+          const editTaskDescription = document.createElement("input");
+          editTaskDescription.setAttribute("id", "new-description-submit");
+          editTaskDescription.setAttribute("value", task_description);
+
+          const editTaskDate = document.createElement("input");
+          editTaskDate.setAttribute("type", "date");
+          editTaskDate.setAttribute("id", "due-date");
+          editTaskDate.setAttribute("value", task_due_date);
+
+          ////////
+
+          const editTaskPriority = document.createElement("select");
+          editTaskPriority.setAttribute("name", "priority")
+          editTaskPriority.setAttribute("id", "task-priority")
+          // editTaskPriority.setAttribute("value", task_priority)
+
+          const lowPriority = document.createElement("option");
+          lowPriority.textContent = "Low";
+          lowPriority.setAttribute("value", "low");
+
+          const mediumPriority = document.createElement("option");
+          mediumPriority.textContent = "Medium";
+          mediumPriority.setAttribute("value", "medium");
+
+          const highPriority = document.createElement("option");
+          highPriority.textContent = "High";
+          highPriority.setAttribute("value", "high");
+
+          editTaskPriority.appendChild(lowPriority);
+          editTaskPriority.appendChild(mediumPriority);
+          editTaskPriority.appendChild(highPriority);
+
+          editTaskPriority.value = task_priority; //sets default (you must do it after appending objects and it has to be set with .value)
+
+          const submitTextButton = document.createElement("div");
+          submitTextButton.textContent = "+";
+          submitTextButton.setAttribute("id", "new-item-submit");
+          submitTextButton.addEventListener('click', () => {
+               submitItemButton("edit", Item.id);
           }
           );
-          itemExpand.appendChild(deleteTask);
 
-          item_task.appendChild(itemExpand);
+          itemExpand.appendChild(editTitleArea);
+          itemExpand.appendChild(editTaskDescription);
+          itemExpand.appendChild(editTaskDate);
+          itemExpand.appendChild(editTaskPriority);
+          itemExpand.appendChild(submitTextButton);
+
+
 
 
      };
@@ -108,7 +214,7 @@ export function constructItemList(projectItem, addNewItem, deleteItem, deletePro
           submitTextButton.textContent = "+";
           submitTextButton.setAttribute("id", "new-item-submit");
           submitTextButton.addEventListener('click', () => {
-               submitItemButton();
+               submitItemButton("add", null);
           }
           );
 
@@ -157,7 +263,7 @@ export function constructItemList(projectItem, addNewItem, deleteItem, deletePro
           itemListDynamic.prepend(newTaskdiv); // we use .prepend instead of .appendChild so that it doesn't add the textbox last
      };
 
-     function submitItemButton() {
+     function submitItemButton(modifier, itemId) {
           var submitTaskDescription = "";
           var submitTitleValue = "";
           var submitDueDate = "";
@@ -176,7 +282,7 @@ export function constructItemList(projectItem, addNewItem, deleteItem, deletePro
           if (checkTitleBlank === "") {
                return; // if the title is blank then don't add the task
           } else {
-               addNewItem(submitTitleValue, submitTaskDescription, submitDueDate, submitPriority, projectItem);
+               addNewItem(submitTitleValue, submitTaskDescription, submitDueDate, submitPriority, projectItem, modifier, itemId);
           }
      }
 
@@ -195,7 +301,7 @@ export function currentDate() {
      return today;
 };
 
-export function formatDate(date){
+export function formatDate(date) {
      const formattedDate = format(new Date(date), 'yyyy-MM-dd');
      return formattedDate;
 }

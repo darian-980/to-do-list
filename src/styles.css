@@ -130,7 +130,7 @@ html {
 #new-item-input {
     border: 1px solid #bebebe;
     border-radius: 6px;
-    color: #bebebe;
+    color: #494949;
     font-size: 0.9em;
     grid: 1/2;
 }
@@ -200,4 +200,14 @@ html {
     background-color: #eeeeee;
     margin-left: 3em;
     margin-top: 2em;
+}
+
+#edit-task {
+    max-width: 10vw;
+    border: 1px solid #bebebe;
+    border-radius: 6px;
+    color: #494949;
+    font-size: 0.9em;
+    text-align: center;
+    background-color: #eeeeee;
 }
